@@ -27,13 +27,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { APP_NAME } from "./constants";
-import { CzNotifications, Notifications } from "@cznethub/cznet-vue-core";
 import User from "@/models/user.model";
-import CzLogin from "@/components/account/cz.login.vue";
 
 @Component({
-  name: "app",
-  components: { CzNotifications, CzLogin },
+  name: "app"
 })
 export default class App extends Vue {
   async created() {
