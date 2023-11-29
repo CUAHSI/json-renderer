@@ -3,7 +3,6 @@ import { Subject } from "rxjs";
 import { getQueryString } from "@/util";
 import { APP_URL, ENDPOINTS, LOGIN_URL, CLIENT_ID } from "@/constants";
 import { Notifications } from "@cznethub/cznet-vue-core";
-import dataset from '@/dataset'
 
 export interface ICzCurrentUserState {
   accessToken: string;

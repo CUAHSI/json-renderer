@@ -96,5 +96,3 @@ const dataset = {
   _id: "650352d1777ca314fe6b6014",
   repository_identifier: "47113551c63b41daa53465aee6cb69e9",
 };
-
-export default dataset;
