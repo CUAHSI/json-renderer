@@ -1,78 +1,11 @@
 version: '3'
 
-volumes:
-  mongo_data:
-    driver: local
-
-services:
-  nginx:
-    image: nginx:1.17.10
-    volumes:
-      # - ./nginx/nginx-local.conf:/etc/nginx/nginx.conf
-      - ./nginx/nginx-local-frontend-dev.conf:/etc/nginx/nginx.conf
-      - ./nginx/config:/etc/ssl
+services:  
+  frontend:
+    build:
+      dockerfile: ./Dockerfile
     ports:
-      - 443:443
+      - 5001:5001
+    restart: unless-stopped
     depends_on:
       - api
-  
-  # frontend:
-  #   image: iguide_frontend
-  #   build:
-  #     dockerfile: ./docker/frontend/Dockerfile
-  #   #volumes:
-  #     #- ./frontend:/app
-  #     #- ./frontend/nginx.conf:/etc/nginx/nginx.conf
-  #   ports:
-  #     - 5001:5001
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - api
-
-  api:
-    image: iguide_api
-    volumes:
-      - ./api:/app/api
-      - ./tests:/app/tests
-      - ./.env:/app/.env
-    build:
-      dockerfile: ./docker/api/Dockerfile
-    ports:
-      - 8000:8000
-    restart: on-failure
-  
-  catalog-trigger:
-    image: iguide_trigger
-    volumes:
-      - ./api:/app/api
-      - ./triggers:/app/triggers
-      - ./.env:/app/.env
-    build:
-      dockerfile: ./docker/triggers/Dockerfile
-    command: >
-      python triggers/update_catalog.py
-    restart: on-failure
-  
-  typeahead-trigger:
-    image: iguide_trigger
-    volumes:
-      - ./api:/app/api
-      - ./triggers:/app/triggers
-      - ./.env:/app/.env
-    build:
-      dockerfile: ./docker/triggers/Dockerfile
-    command: >
-      python triggers/update_typeahead.py
-    restart: on-failure
-
-  repo-scheduler:
-    image: iguide_scheduler
-    volumes:
-      - ./api:/app/api
-      - ./triggers:/app/triggers
-      - ./.env:/app/.env
-    build:
-      dockerfile: ./docker/triggers/Dockerfile
-    command: >
-      python triggers/scheduler.py
-    restart: on-failure
