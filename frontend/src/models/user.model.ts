@@ -5,6 +5,7 @@ import { RawLocation } from "vue-router";
 import { getQueryString } from "@/util";
 import { APP_URL, ENDPOINTS, LOGIN_URL, CLIENT_ID } from "@/constants";
 import { Notifications } from "@cznethub/cznet-vue-core";
+import dataset from '@/dataset'
 
 export interface ICzCurrentUserState {
   accessToken: string;
@@ -232,19 +233,8 @@ export default class User extends Model {
   }
 
   static async fetchDataset(id: string) {
-    const response: Response = await fetch(`${ENDPOINTS.dataset}/${id}/`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.accessToken}`,
-      },
-    });
-
-    // TODO: need to get `repoIdentifier` as part of response from this endpoint.
-
-    if (response.ok) {
-      const result = await response.json();
-      return result;
+    if (dataset) {
+      return dataset
     } else {
       Notifications.toast({
         message: "Failed to load dataset",
