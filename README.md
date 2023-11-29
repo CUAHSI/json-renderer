@@ -1,4 +1,4 @@
-# cznet-discovery
+# json-renderer
 
 ## Project setup
 ```
