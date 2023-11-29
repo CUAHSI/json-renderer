@@ -6,9 +6,9 @@
         <v-sheet
           min-height="70vh"
           rounded
-          :elevation="$route.meta.hideNavigation || $route.meta.flat ? 0 : 2"
+          elevation=0
         >
-          <router-view name="content" :key="$route.fullPath" />
+          <CdDataset />
         </v-sheet>
       </v-container>
     </v-main>
@@ -28,9 +28,11 @@
 import { Component, Vue } from "vue-property-decorator";
 import { APP_NAME } from "./constants";
 import User from "@/models/user.model";
+import CdDataset from "@/components/dataset/cd.dataset.vue";
 
 @Component({
-  name: "app"
+  name: "app",
+  components: { CdDataset }
 })
 export default class App extends Vue {
   async created() {

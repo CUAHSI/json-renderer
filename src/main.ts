@@ -8,10 +8,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import vuetify from '@/plugins/vuetify'
 import browserDetect from "vue-browser-detect-plugin"
-import VueRouter from 'vue-router'
 import VueI18n from 'vue-i18n'
 
-import { router } from './router/router'
 import { orm } from '@/models/orm'
 import { persistedPaths } from './models/persistedPaths'
 import { APP_NAME } from './constants'
@@ -42,7 +40,6 @@ const store = new Vuex.Store({
 })
       
 Vue.use(VueCookies)
-Vue.use(VueRouter)
 Vue.use(browserDetect)
 Vue.use(VueI18n)
 
@@ -56,7 +53,6 @@ const i18n = new VueI18n({
 new Vue({
   store,
   vuetify,
-  router,
   i18n,
   render: (h) => h(App)
 }).$mount('#app')

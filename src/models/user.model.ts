@@ -1,7 +1,5 @@
-import { router } from "@/router/router";
 import { Model } from "@vuex-orm/core";
 import { Subject } from "rxjs";
-import { RawLocation } from "vue-router";
 import { getQueryString } from "@/util";
 import { APP_URL, ENDPOINTS, LOGIN_URL, CLIENT_ID } from "@/constants";
 import { Notifications } from "@cznethub/cznet-vue-core";
@@ -24,7 +22,6 @@ export interface IUserState {
 export default class User extends Model {
   static entity = "users";
   static isLoginListenerSet = false;
-  static logInDialog$ = new Subject<RawLocation | undefined>();
   static loggedIn$ = new Subject<void>();
 
   static fields() {
@@ -53,10 +50,6 @@ export default class User extends Model {
       uiSchema: null,
       schemaDefaults: null,
     };
-  }
-
-  static openLogInDialog(redirectTo?: RawLocation) {
-    this.logInDialog$.next(redirectTo);
   }
 
   static async logIn(callback?: () => any) {
@@ -150,9 +143,6 @@ export default class User extends Model {
       type: "info",
     });
 
-    if (router.currentRoute.meta?.hasLoggedInGuard) {
-      router.push({ path: "/" });
-    }
   }
 
   static async fetchSchemas() {

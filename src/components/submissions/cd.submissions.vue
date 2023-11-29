@@ -17,25 +17,6 @@
         />
 
         <v-spacer></v-spacer>
-
-        <v-btn
-          color="primary"
-          class="mr-2"
-          rounded
-          @click="$router.push({ name: 'register' })"
-        >
-          <v-icon class="mr-2">mdi-link-plus</v-icon>
-          Register Dataset
-        </v-btn>
-
-        <v-btn
-          color="primary"
-          rounded
-          @click="$router.push({ name: 'contribute' })"
-        >
-          <v-icon class="mr-2">mdi-text-box-plus</v-icon>
-          New Submission
-        </v-btn>
       </div>
     </div>
 
@@ -160,20 +141,6 @@
 
                     <div class="d-flex flex-column mt-4 mt-md-0 actions">
                       <!-- VIEW -->
-                      <v-btn
-                        :id="`sub-${index}-view`"
-                        target="_blank"
-                        color="blue-grey lighten-4"
-                        rounded
-                        @click="
-                          $router.push({
-                            name: 'dataset',
-                            params: { id: item.identifier },
-                          })
-                        "
-                      >
-                        <v-icon class="mr-1">mdi-text-box</v-icon> View
-                      </v-btn>
 
                       <!-- VIEW IN REPOSITORY -->
                       <v-btn
@@ -210,21 +177,6 @@
                       </v-btn>
 
                       <!-- EDIT -->
-                      <v-btn
-                        v-else
-                        :id="`sub-${index}-edit`"
-                        @click="
-                          $router.push({
-                            name: 'dataset-edit',
-                            params: { id: item.identifier },
-                          })
-                        "
-                        :disabled="isUpdating[item.id] || isDeleting[item.id]"
-                        rounded
-                      >
-                        <v-icon>mdi-pencil</v-icon
-                        ><span class="ml-1">Edit</span>
-                      </v-btn>
 
                       <!-- DELETE -->
                       <v-btn
