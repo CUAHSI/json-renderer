@@ -3,6 +3,9 @@ import { Subject } from "rxjs";
 import { getQueryString } from "@/util";
 import { APP_URL, ENDPOINTS, LOGIN_URL, CLIENT_ID } from "@/constants";
 import { Notifications } from "@cznethub/cznet-vue-core";
+import schema from '@/schemas/schema.json'
+import uiSchema from '@/schemas/ui-schema.json'
+import schemaDefaults from '@/schemas/schema-defaults.json'
 
 export interface ICzCurrentUserState {
   accessToken: string;
@@ -146,9 +149,9 @@ export default class User extends Model {
 
   static async fetchSchemas() {
     const responses: PromiseSettledResult<any>[] = await Promise.allSettled([
-      fetch(`${ENDPOINTS.schemaUrl}/`),
-      fetch(`${ENDPOINTS.uiSchemaUrl}/`),
-      fetch(`${ENDPOINTS.schemaDefaultsUrl}/`),
+      // fetch(`${ENDPOINTS.schemaUrl}/`),
+      // fetch(`${ENDPOINTS.uiSchemaUrl}/`),
+      // fetch(`${ENDPOINTS.schemaDefaultsUrl}/`),
     ]);
 
     const results = responses.map((r: PromiseSettledResult<any>) => {
