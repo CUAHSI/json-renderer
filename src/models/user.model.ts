@@ -225,8 +225,11 @@ export default class User extends Model {
   }
 
   static async fetchDataset(id: string) {
-    if (dataset) {
-      return dataset
+    const baseUrl = process.env.BASE_URL;
+    const response = await fetch(`${ baseUrl }/dataset.json`);
+    const json = await response.json();
+    if (json) {
+      return json
     } else {
       Notifications.toast({
         message: "Failed to load dataset",
