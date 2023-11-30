@@ -104,8 +104,6 @@ export default class Submission extends Model implements ISubmission {
         data = data.map(this.getInsertDataFromDb);
         this.insertOrUpdate({ data });
       } else if (response.status === 401) {
-        // User has been logged out
-        User.logOut();
       }
       this.commit((state) => {
         return (state.isFetching = false);

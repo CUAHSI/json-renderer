@@ -3,14 +3,9 @@ import { Subject } from "rxjs";
 import { getQueryString } from "@/util";
 import { APP_URL, ENDPOINTS, LOGIN_URL, CLIENT_ID } from "@/constants";
 import { Notifications } from "@cznethub/cznet-vue-core";
-// import * as schemaIn from '@/schemas/schema.json'
-// import * as  uiSchemaIn from '@/schemas/ui-schema.json'
-// import * as  schemaDefaultsIn from '@/schemas/schema-defaults.json'
 import schemaIn from '@/schemas/schema.json'
 import uiSchemaIn from '@/schemas/ui-schema.json'
 import schemaDefaultsIn from '@/schemas/schema-defaults.json'
-// @ts-ignore
-// import dataset from '/dataset.json'
 
 export interface ICzCurrentUserState {
   accessToken: string;
@@ -107,36 +102,8 @@ export default class User extends Model {
     }
   }
 
-  static async checkAuthorization() {
-    try {
-      // TODO: find endpoint to verify authentication
-      const response: Response = await fetch(
-        `${ENDPOINTS.search}?${getQueryString({
-          access_token: User.$state.accessToken,
-        })}`
-      );
-
-      if (response.status !== 200) {
-        // Something went wrong, authorization may be invalid
-        User.commit((state) => {
-          state.isLoggedIn = false;
-        });
-      }
-    } catch (e: any) {
-      User.commit((state) => {
-        state.isLoggedIn = false;
-      });
-    }
-  }
-
   static async logOut() {
-    // try {
-    // await fetch(`${ENDPOINTS.logout}`);
     this._logOut();
-    // } catch (e) {
-    // We don't care about the response status. We at least log the user out in the frontend.
-    // this._logOut();
-    // }
   }
 
   private static async _logOut() {
@@ -170,44 +137,6 @@ export default class User extends Model {
     User.commit((state) => {
       state.schemaDefaults = schemaDefaults;
     });
-  }
-
-  static async submit(data: any) {
-    const response: Response = await fetch(`${ENDPOINTS.submit}/`, {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.accessToken}`,
-      },
-    });
-    const result = await response.json();
-    return response.ok ? result._id : false;
-  }
-
-  /**
-   * Updates a submission
-   * @param {string} identifier - the identifier of the resource in our database
-   * @param {any} data - the form data to be saved
-   */
-  static async updateDataset(id: string, data: any) {
-    const response: Response = await fetch(`${ENDPOINTS.dataset}/${id}/`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${this.accessToken}`,
-      },
-    });
-
-    if (response.ok) {
-      return true;
-    } else {
-      Notifications.toast({
-        message: "Failed to save changes",
-        type: "error",
-      });
-    }
   }
 
   static async fetchDataset(id: string) {

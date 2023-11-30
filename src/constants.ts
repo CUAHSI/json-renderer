@@ -31,7 +31,5 @@ export const ENDPOINTS: { [key: string]: string } = {
   schemaUrl: `${API_BASE}/schemas/schema.json`,
   uiSchemaUrl: `${API_BASE}/schemas/ui-schema.json`,
   schemaDefaultsUrl: `${API_BASE}/schemas/schema-defaults.json`,
-  // api: `${API_BASE}`,
-  // logout: `${API_BASE}/logout`,
 };
 export const INITIAL_RANGE: [number, number] = [MIN_YEAR, MAX_YEAR];
