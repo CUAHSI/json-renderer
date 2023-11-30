@@ -1,13 +1,10 @@
 import { ISubmission } from "@/components/submissions/types";
 import { Model } from "@vuex-orm/core";
-import User from "./user.model";
 import {
   EnumSubmissionSorts,
   EnumSortDirections,
 } from "@/components/submissions/types";
 import { itemsPerPageArray } from "@/components/submissions/constants";
-import { ENDPOINTS } from "@/constants";
-import { Notifications } from "@cznethub/cznet-vue-core";
 
 export interface ISubmisionState {
   sortBy: { key: string; label: string };
@@ -82,145 +79,5 @@ export default class Submission extends Model implements ISubmission {
       url: apiSubmission.url,
       id: apiSubmission._id,
     };
-  }
-
-  static async fetchSubmissions() {
-    console.log("Fetching submissions...");
-    try {
-      this.commit((state) => {
-        return (state.isFetching = true);
-      });
-
-      const response: Response = await fetch(ENDPOINTS.submissions, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${User.$state.accessToken}`,
-        },
-      });
-
-      if (response.ok) {
-        let data = await response.json();
-        data = data.map(this.getInsertDataFromDb);
-        this.insertOrUpdate({ data });
-      } else if (response.status === 401) {
-      }
-      this.commit((state) => {
-        return (state.isFetching = false);
-      });
-      return response.status;
-    } catch (e: any) {
-      this.commit((state) => {
-        return (state.isFetching = false);
-      });
-
-      // return response.status;
-    }
-  }
-
-  // TODO: modify endpoint so that it can perform the delete with the db id itself
-  static async deleteSubmission(identifier: string, id: string) {
-    console.log("Deleting submission...");
-    try {
-      const response: Response = await fetch(
-        `${ENDPOINTS.deleteSubmission}/${identifier}/`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${User.$state.accessToken}`,
-          },
-        }
-      );
-
-      if (response.ok) {
-        await Submission.delete([id]);
-      } else {
-        Notifications.toast({
-          message: "Failed to delete submission",
-          type: "error",
-        });
-      }
-
-      return response.status;
-    } catch (e: any) {
-      // this.commit((state) => {
-      //   return (state.isFetching = false);
-      // });
-      // return e.status;
-    }
-  }
-
-  /**
-   * Reads a submission from a repository that has not been saved to our database
-   * @param {string} identifier - the identifier of the resource in the repository
-   */
-  static async registerSubmission(identifier: string) {
-    const response: Response = await fetch(
-      `${ENDPOINTS.register}/${identifier}/`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${User.$state.accessToken}`,
-        },
-      }
-    );
-
-    if (response.ok) {
-      const result = await response.json();
-      Notifications.toast({
-        message: "Your dataset has been registered!",
-        type: "success",
-      });
-      return Submission.getInsertData(result);
-    } else {
-      // this.wasNotFound = true;
-      if (response.status === 400) {
-        Notifications.toast({
-          message: "The resource provided has already been registered",
-          type: "error",
-        });
-      } else {
-        Notifications.toast({
-          message: "Failed to load existing submission",
-          type: "error",
-        });
-      }
-
-      return response.status;
-    }
-  }
-
-  /**
-   * Refreshes a submission by re-fetching the data from the repository
-   * @param {string} repoIdentifier - the identifier of the resource in the repository
-   */
-  static async updateSubmission(repoIdentifier: string) {
-    const response: Response = await fetch(
-      `${ENDPOINTS.refresh}/${repoIdentifier}/`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${User.$state.accessToken}`,
-        },
-      }
-    );
-
-    if (response.ok) {
-      const result = await response.json();
-      Notifications.toast({
-        message: "Your dataset has been updated!",
-        type: "success",
-      });
-      return result;
-    } else {
-      Notifications.toast({
-        message: "Failed to update dataset",
-        type: "error",
-      });
-      return null;
-    }
   }
 }
