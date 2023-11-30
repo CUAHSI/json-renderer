@@ -6,6 +6,8 @@ import { Notifications } from "@cznethub/cznet-vue-core";
 import schema from '@/schemas/schema.json'
 import uiSchema from '@/schemas/ui-schema.json'
 import schemaDefaults from '@/schemas/schema-defaults.json'
+// @ts-ignore
+// import dataset from '/dataset.json'
 
 export interface ICzCurrentUserState {
   accessToken: string;
@@ -225,11 +227,10 @@ export default class User extends Model {
   }
 
   static async fetchDataset(id: string) {
-    const baseUrl = process.env.BASE_URL;
-    const response = await fetch(`${ baseUrl }/dataset.json`);
-    const json = await response.json();
-    if (json) {
-      return json
+    // @ts-ignore
+    if (dataset) {
+      // @ts-ignore
+      return dataset
     } else {
       Notifications.toast({
         message: "Failed to load dataset",
