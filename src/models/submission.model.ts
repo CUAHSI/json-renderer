@@ -1,10 +1,4 @@
-import { ISubmission } from "@/components/submissions/types";
 import { Model } from "@vuex-orm/core";
-import {
-  EnumSubmissionSorts,
-  EnumSortDirections,
-} from "@/components/submissions/types";
-import { itemsPerPageArray } from "@/components/submissions/constants";
 
 export interface ISubmisionState {
   sortBy: { key: string; label: string };
@@ -13,7 +7,7 @@ export interface ISubmisionState {
   isFetching: boolean;
 }
 
-export default class Submission extends Model implements ISubmission {
+export default class Submission extends Model {
   // This is the name used as module name of the Vuex Store.
   static entity = "submissions";
   static primaryKey = ["id"];
@@ -32,9 +26,6 @@ export default class Submission extends Model implements ISubmission {
 
   static state() {
     return {
-      sortBy: { key: "date", label: EnumSubmissionSorts.date },
-      sortDirection: { key: "desc", label: EnumSortDirections.desc },
-      itemsPerPage: itemsPerPageArray[0],
       isFetching: false,
     };
   }
@@ -67,17 +58,4 @@ export default class Submission extends Model implements ISubmission {
     };
   }
 
-  /** Used to transform submission data that comes from the repository API and was transformed to our schema */
-  static getInsertData(apiSubmission): ISubmission | Partial<Submission> {
-    return {
-      title: apiSubmission.name,
-      authors: apiSubmission.creator.map((c) => c.name),
-      date: new Date(apiSubmission.dateCreated).getTime(),
-      identifier: Array.isArray(apiSubmission.identifier)
-        ? apiSubmission.identifier[0]
-        : apiSubmission.identifier,
-      url: apiSubmission.url,
-      id: apiSubmission._id,
-    };
-  }
 }
