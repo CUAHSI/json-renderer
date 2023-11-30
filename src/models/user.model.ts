@@ -3,9 +3,12 @@ import { Subject } from "rxjs";
 import { getQueryString } from "@/util";
 import { APP_URL, ENDPOINTS, LOGIN_URL, CLIENT_ID } from "@/constants";
 import { Notifications } from "@cznethub/cznet-vue-core";
-import schema from '@/schemas/schema.json'
-import uiSchema from '@/schemas/ui-schema.json'
-import schemaDefaults from '@/schemas/schema-defaults.json'
+// import * as schemaIn from '@/schemas/schema.json'
+// import * as  uiSchemaIn from '@/schemas/ui-schema.json'
+// import * as  schemaDefaultsIn from '@/schemas/schema-defaults.json'
+import schemaIn from '@/schemas/schema.json'
+import uiSchemaIn from '@/schemas/ui-schema.json'
+import schemaDefaultsIn from '@/schemas/schema-defaults.json'
 // @ts-ignore
 // import dataset from '/dataset.json'
 
@@ -150,42 +153,23 @@ export default class User extends Model {
   }
 
   static async fetchSchemas() {
-    const responses: PromiseSettledResult<any>[] = await Promise.allSettled([
-      // fetch(`${ENDPOINTS.schemaUrl}/`),
-      // fetch(`${ENDPOINTS.uiSchemaUrl}/`),
-      // fetch(`${ENDPOINTS.schemaDefaultsUrl}/`),
-    ]);
+    if (!schemaIn || !uiSchemaIn || !schemaDefaultsIn){
+      alert("Missing schemas")
+      return
+    }
 
-    const results = responses.map((r: PromiseSettledResult<any>) => {
-      if (r.status === "fulfilled") {
-        return r.value;
-      }
+    let schema = schemaIn;
+    let uiSchema = uiSchemaIn;
+    let schemaDefaults = schemaDefaultsIn;
+    User.commit((state) => {
+      state.schema = schema;
     });
-
-    let schema = null;
-    let uiSchema = null;
-    let schemaDefaults = null;
-
-    if (results[0]?.ok) {
-      try {
-      } catch (e) {}
-      schema = await results[0]?.json();
-      User.commit((state) => {
-        state.schema = schema;
-      });
-    }
-    if (results[1]?.ok) {
-      uiSchema = await results[1]?.json();
-      User.commit((state) => {
-        state.uiSchema = uiSchema;
-      });
-    }
-    if (results[2]?.ok) {
-      schemaDefaults = await results[2]?.json();
-      User.commit((state) => {
-        state.schemaDefaults = schemaDefaults;
-      });
-    }
+    User.commit((state) => {
+      state.uiSchema = uiSchema;
+    });
+    User.commit((state) => {
+      state.schemaDefaults = schemaDefaults;
+    });
   }
 
   static async submit(data: any) {
